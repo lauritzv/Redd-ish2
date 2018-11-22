@@ -1,0 +1,46 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# idea stuff:
+.idea/*
+tasks.xml
+
+# iml
+*.iml
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+#Eclipse files
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+.buildpath
+.project
+
+#Target directory
+target/*
+
+#Sensitive data
+src/main/resources/hibernate.cfg.xml
+/src/main/resources/hibernate.cfg.xml
+.idea/
+target/
