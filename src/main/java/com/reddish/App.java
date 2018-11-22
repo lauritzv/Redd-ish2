@@ -105,6 +105,7 @@ public class App {
 
         get(REGISTER_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
+            model.put(USER, req.attribute(USER));
             return new FreeMarkerEngine().render(
                     new ModelAndView(model, REGISTER_VIEW)
             );
@@ -130,6 +131,7 @@ public class App {
 
         get(REGISTER_SUBREDDIT_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
+            model.put(USER, req.attribute(USER));
             return new FreeMarkerEngine().render(
                     new ModelAndView(model, REGISTER_SUBREDDIT_VIEW)
             );
