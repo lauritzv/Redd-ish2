@@ -1,10 +1,6 @@
 package com.reddish;
 
-import com.reddish.dao.DatabasePopulatorerer;
-import com.reddish.dao.FakePostDao;
-import com.reddish.dao.PostDao;
-import com.reddish.dao.SubRedditDao;
-import com.reddish.dao.CommentDao;
+import com.reddish.dao.*;
 import com.reddish.model.HttpException;
 import com.reddish.model.Post;
 import com.reddish.model.ReddishUser;
@@ -115,8 +111,40 @@ public class App {
         });
 
         post(REGISTER_PATH, (req, res) -> {
-            //TODO register og pliz bruk PRG om du gjør dette
-            return "registering new userz ain't been implemented yet my dude";
+            EntityManager emaids = sf.createEntityManager();
+            String email = req.queryParams("email");
+            String username = req.queryParams("username");
+            String password = req.queryParams("password");
+            String passwordrepeat = req.queryParams("passwordrepeat");
+            ReddishUser user = UserDao.registerUser(emaids, username, email, password, passwordrepeat);
+            if (user == null) {
+                Map<String, Object> model = new HashMap<>();
+                res.redirect(REGISTER_PATH);
+            } else {
+                LoginUtil.login(emaids, req.session(), username, password);
+                res.redirect(FRONTPAGE_PATH);
+            }
+            emaids.close();
+            return "";
+        });
+
+        get(REGISTER_SUBREDDIT_PATH, (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            return new FreeMarkerEngine().render(
+                    new ModelAndView(model, REGISTER_SUBREDDIT_VIEW)
+            );
+        });
+
+        post(REGISTER_SUBREDDIT_PATH, (req, res) -> {
+            EntityManager emaids = sf.createEntityManager();
+            String name = req.queryParams("name");
+            Subreddit subreddit = SubRedditDao.createReddit(emaids, name);
+            emaids.close();
+            if(subreddit == null)
+                res.redirect(REGISTER_SUBREDDIT_PATH);
+            else
+                res.redirect("/r/" + name);
+            return "";
         });
 
         get(POST_PATH, (req, res) -> {

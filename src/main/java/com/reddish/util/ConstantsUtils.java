@@ -21,7 +21,8 @@ public class ConstantsUtils {
     public final static String COMMENTS_PATH = SUBREDDIT_PATH + "/:postid/comments";
     public final static String POST_PARAM = "post";
     public final static String POSTID_PARAM = "postid";
-
+    public static final String REGISTER_SUBREDDIT_PATH = "registersubreddit";
+    public static final String REGISTER_SUBREDDIT_VIEW = "registersubreddit.ftl";
 
     public static final String POST_VIEW = "post.ftl";
     public static final String POST_PATH = "/post";
