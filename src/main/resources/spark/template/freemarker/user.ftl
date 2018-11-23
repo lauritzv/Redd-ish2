@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reddish</title>
+    <title>Reddish | user - ${pageuser.username}</title>
     <#include "headconstants.ftl">
     <script src="/js/votes.js"></script>
 

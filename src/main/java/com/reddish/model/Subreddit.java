@@ -54,8 +54,7 @@ public class Subreddit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Subreddit subreddit = (Subreddit) o;
-        return id == subreddit.id &&
-                Objects.equals(name, subreddit.name);
+        return id == subreddit.id;
     }
 
     @Override

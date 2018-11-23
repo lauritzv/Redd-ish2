@@ -44,7 +44,12 @@ public class UserDao {
     }
 
     public static boolean unsubscribeUserFrom(String subredditname, ReddishUser user, EntityManager em) {
-        return false;
+        Subreddit sub = SubRedditDao.getReddit(em, subredditname);
+        boolean unsubscribed = user.unsubscribe(sub);
+        if(unsubscribed){
+            mergeUser(em, user);
+        }
+        return unsubscribed;
     }
 
     public static void mergeUser(EntityManager em, ReddishUser user){

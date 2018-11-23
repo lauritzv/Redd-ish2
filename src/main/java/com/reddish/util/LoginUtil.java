@@ -34,6 +34,7 @@ public class LoginUtil {
         if(!isLoggedIn(session))
             return null;
         ReddishUser user = session.attribute(ConstantsUtils.USER);
+        UserDao.mergeUser(em, user);
         return UserDao.getUserbyUsername(em, user.getUsername());
     }
 }

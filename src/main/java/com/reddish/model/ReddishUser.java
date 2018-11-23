@@ -34,7 +34,7 @@ public class ReddishUser {
 	@OneToMany (fetch = FetchType.EAGER)
     private List<Post> posts;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Subreddit> subscriptions;
 
     public ReddishUser() {

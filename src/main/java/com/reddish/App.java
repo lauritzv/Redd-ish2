@@ -28,7 +28,7 @@ public class App {
     private static boolean hasDatabase = false;
 
     public static void main(String[] args) {
-        secure("src/main/resources/keystore.jks","password", null, null);
+        secure("src/main/resources/keystore.jks", "password", null, null);
         SessionFactory sf = new Configuration().configure().buildSessionFactory();
 
         if (!hasDatabase) {
@@ -60,7 +60,9 @@ public class App {
 
         get(SUBREDDIT_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
-            model.put(USER, req.attribute(USER));
+            EntityManager emaids = sf.createEntityManager();
+            ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
+            model.put(USER, user);
             String subredditname = req.params(SUBREDDIT_PARAM);
             model.put(SUBREDDIT_PARAM, subredditname);
             if (subredditname == null) {
@@ -69,29 +71,54 @@ public class App {
             if (SubRedditDao.getReddit(sf.createEntityManager(), subredditname) == null) {
                 throw new HttpException(404, NO_SUCH_SUBREDDISH);
             }
-
-            EntityManager emaids = sf.createEntityManager();
             List<Post> posts = PostDao.getPosts(emaids, subredditname);
-            emaids.close();
             posts.sort((p1, p2) -> {
                 return (int) (p2.getVotes() - p1.getVotes());
             });
             model.put(POSTS_PARAM, posts);
-            return new FreeMarkerEngine().render(
+
+
+            if (user != null) {
+                if (user.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent()) {
+                    model.put("subscribed", true);
+                }
+            }
+            String s = new FreeMarkerEngine().render(
                     new ModelAndView(model, FRONTPAGE_VIEW)
             );
+            emaids.close();
+            return s;
         });
 
-        get(SUBSCRIBE_PATH, (req, res) -> {
+        post(SUBSCRIBE_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             EntityManager emaids = sf.createEntityManager();
             String subredditname = req.params(SUBREDDIT_PARAM);
             ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
-            UserDao.subscribeUserTo(subredditname, user, emaids);
+
+
+            //subscribe if you're subscribed, unsubscribe if not
+            if (!user.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent()) {
+                UserDao.subscribeUserTo(subredditname, user, emaids);
+            } else {
+                UserDao.unsubscribeUserFrom(subredditname, user, emaids);
+            }
             emaids.close();
             res.redirect("/r/" + subredditname);
             return "";
+        });
 
+        get("/test/:subreddit", (req, res) -> {
+            EntityManager emaids = sf.createEntityManager();
+            String subredditname = req.params(SUBREDDIT_PARAM);
+            ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
+
+            ReddishUser freshuser = UserDao.getUserbyUsername(emaids, user.getUsername());
+            freshuser.getSubscriptions();
+            emaids.close();
+
+            return user.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent()
+                    + " | " + freshuser.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent();
         });
 
         get(LOGIN_PATH, (req, res) -> {
@@ -155,7 +182,7 @@ public class App {
             String name = req.queryParams("name");
             Subreddit subreddit = SubRedditDao.createReddit(emaids, name);
             emaids.close();
-            if(subreddit == null)
+            if (subreddit == null)
                 res.redirect(REGISTER_SUBREDDIT_PATH);
             else
                 res.redirect("/r/" + name);
@@ -176,10 +203,10 @@ public class App {
             String type = req.queryParams("type");
             EntityManager emaids = sf.createEntityManager();
             Subreddit sub = SubRedditDao.getReddit(emaids, subreddit);
-            if (type.equals("link")){
+            if (type.equals("link")) {
                 String link = req.queryParams("link");
                 PostDao.postLink(emaids, ((ReddishUser) req.session().attribute(USER)), title, link, sub);
-            }else{
+            } else {
                 String content = req.queryParams("content");
                 PostDao.postSelf(emaids, ((ReddishUser) req.session().attribute(USER)), title, content, sub);
             }
@@ -209,7 +236,7 @@ public class App {
             emaids.close();
 
             Optional<ReddishUser> optionalUser = users.stream().filter(u -> u.getUsername().equals(req.params("username"))).findAny();
-            if(!optionalUser.isPresent()){
+            if (!optionalUser.isPresent()) {
                 throw new HttpException(404, NO_SUCH_USER);
             }
 
@@ -258,7 +285,7 @@ public class App {
 
         });
 
-        before ((request, response) -> {
+        before((request, response) -> {
             if (request.session(false) != null)
                 request.attribute(USER, request.session(false).attribute(USER));
         });

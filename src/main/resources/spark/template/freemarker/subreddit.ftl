@@ -23,6 +23,15 @@
     <h2>
     <#if subreddit?? && subreddit != "">
         Subreddish: ${subreddit}
+        <#if user?? && subscribed??>
+            <form method="post" action="/r/${subreddit}/subscribe">
+                <button class="btn-danger subscription-button" type="submit" formmethod="post">unsubscribe</button>
+            </form>
+        <#elseif user??>
+            <form method="post" action="/r/${subreddit}/subscribe">
+                <button class="btn-primary subscription-button" type="submit" formmethod="post">subscribe</button>
+            </form>
+        </#if>
     <#else>
     The main page
     </#if>

@@ -47,3 +47,8 @@ textarea{
     border: none;
     border-radius: 5px;
 }
+
+.subscription-button
+{
+    font-size: 12px;
+}
