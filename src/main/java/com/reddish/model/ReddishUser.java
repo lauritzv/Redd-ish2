@@ -151,6 +151,10 @@ public class ReddishUser {
        return post;
     }
 
+    public boolean deletePost(Post post){
+        return getPosts().remove(post);
+    }
+
     public boolean subscribe( Subreddit subreddit){
         if(subreddit == null || subscriptions.contains(subreddit))
             return false;

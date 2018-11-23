@@ -42,6 +42,11 @@
                     </td>
                     <td rowspan="2" class="post-title">
                         <a href="${post.link}">${post.title}</a>
+                        <#if user?? && pageuser.id=user.id>
+                        <form>
+                            <button type="submit" formmethod="post" formaction="/r/${post.subreddit.name}/${post.id}/delete" class="btn-danger delete-post-button">delete</button>
+                        </form>
+                        </#if>
                     </td>
                 </tr>
                 <tr>

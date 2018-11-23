@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
+import sun.rmi.runtime.Log;
 
 
 import javax.persistence.EntityManager;
@@ -289,6 +290,22 @@ public class App {
             return new FreeMarkerEngine().render(
                     new ModelAndView(model, COMMENTS_VIEW));
 
+        });
+
+        post(DELETE_POST_PATH, (req, res) -> {
+            EntityManager emaids = sf.createEntityManager();
+            ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
+            Post post = PostDao.findPost(emaids, Long.parseLong(req.params(POSTID_PARAM)));
+            /*if(user.getId() == post.getPoster().getId()){
+                PostDao.deletePost(emaids, post);
+            }*/
+
+
+            emaids.close();
+
+            //res.redirect("/user/" + post.getPoster().getUsername());
+
+            return "deleting doesn't work yet";
         });
 
         before((request, response) -> {

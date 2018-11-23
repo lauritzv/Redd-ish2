@@ -135,4 +135,16 @@ public class Post {
     public void setContent(String content) {
         this.content = content;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Post)) {
+            return false;
+        }
+        Post c = (Post) o;
+        return c.getId() == this.getId();
+    }
 }

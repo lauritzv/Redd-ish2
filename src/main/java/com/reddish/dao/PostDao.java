@@ -6,6 +6,7 @@ import com.reddish.model.ReddishUser;
 import com.reddish.model.Subreddit;
 import freemarker.template.utility.HtmlEscape;
 import org.apache.commons.text.StringEscapeUtils;
+import org.w3c.dom.Entity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -15,8 +16,9 @@ import java.util.List;
 
 public class PostDao {
 
-
-    final static int NUMBER_OF_POSTS = 10;
+    public static void deletePost(EntityManager em, Post post){
+        //Todo without breaking the database entries - I attempted and failed
+    }
 
     public static void mergePost(EntityManager em, Post post)
     {
