@@ -13,7 +13,8 @@ public class UserDao {
 
     public static ReddishUser getUserbyUsername(EntityManager em, String username) {
         try {
-            return em.createQuery("FROM ReddishUser WHERE username like '" + username + "'", ReddishUser.class).getSingleResult();
+            return em.createQuery("FROM ReddishUser WHERE username like :username", ReddishUser.class)
+                    .setParameter("username", username).getSingleResult();
         } catch (Exception e) {
             return null;
         }

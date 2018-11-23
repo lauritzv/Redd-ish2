@@ -11,7 +11,8 @@ public class SubRedditDao {
 
     public static Subreddit getReddit(EntityManager em, String name){
         try {
-            return em.createQuery("FROM Subreddit WHERE name like '" + name + "'", Subreddit.class).getSingleResult();
+            return em.createQuery("FROM Subreddit WHERE name like :name", Subreddit.class).
+                    setParameter("name", name).getSingleResult();
         } catch(Exception e){
             return null;
         }

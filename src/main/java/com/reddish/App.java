@@ -269,7 +269,7 @@ public class App {
             }
         });
 
-        before(SUBREDDIT_PATH, (request, response) -> {
+        before(SUBSCRIBE_PATH, (request, response) -> {
             boolean authenticated = LoginUtil.isLoggedIn(request.session());
             if (!authenticated) {
                 throw new HttpException(401, NOT_PERMITTED);

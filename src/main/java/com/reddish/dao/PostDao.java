@@ -32,11 +32,12 @@ public class PostDao {
     }
 
     public static Post findPost(EntityManager em, Long id) {
-        return em.createQuery("FROM Post where id = " + id, Post.class).getSingleResult();
+        return em.createQuery("FROM Post where id = :id", Post.class).setParameter("id", (int) (long) id).getSingleResult();
     }
 
     public static List<Post> getPosts(EntityManager em, String subreddit) {
-        return em.createQuery("FROM Post where subreddit.name like '" + subreddit + "'", Post.class).getResultList();
+        return em.createQuery("FROM Post where subreddit.name like :subreddit", Post.class)
+                .setParameter("subreddit", subreddit).getResultList();
     }
 
     public static void postLink(EntityManager em, ReddishUser poster, String title, String link, Subreddit subreddit) {

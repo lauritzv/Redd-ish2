@@ -16,7 +16,8 @@ import java.util.List;
 public class CommentDao {
 
     public static List<Comment> getComments(EntityManager em, int postid) {
-        return em.createQuery("FROM Comment where post = " + postid).getResultList();
+        return em.createQuery("FROM Comment where post = :postid")
+                .setParameter("postid", postid).getResultList();
     }
 
     public static void addComment(EntityManager em, String content, ReddishUser commenter, Post post) {
