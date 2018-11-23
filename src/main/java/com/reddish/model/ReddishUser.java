@@ -28,7 +28,7 @@ public class ReddishUser {
 
 	private Long karma;
 
-	@OneToMany
+	@OneToMany (fetch = FetchType.EAGER)
 	private List<Comment> comments;
 
 	@OneToMany (fetch = FetchType.EAGER)
@@ -91,7 +91,14 @@ public class ReddishUser {
     }
 
     public Long getKarma() {
-        return karma;
+        Long sum = 0l;
+        for (Post p : posts)
+            sum = sum + p.getVotes();
+
+        for (Comment c : comments)
+            sum = sum + c.getVotes();
+
+        return sum;
     }
 
     public void setKarma(Long karma) {
