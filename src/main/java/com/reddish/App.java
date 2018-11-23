@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.reddish.REST.VoteRest.setupVoteRest;
 import static com.reddish.util.ConstantsUtils.*;
@@ -69,7 +70,12 @@ public class App {
                 model.put(SUBREDDIT_PARAM, EMPTY_STRING);
             }
             if (SubRedditDao.getReddit(sf.createEntityManager(), subredditname) == null) {
-                throw new HttpException(404, NO_SUCH_SUBREDDISH);
+                List<Subreddit> similarNamedSubreddishes = SubRedditDao.getAllReddits(emaids).stream().filter(sub -> sub.getName().equalsIgnoreCase(subredditname)).collect(Collectors.toList());
+                model.put("similarnamedsubreddishes", similarNamedSubreddishes);
+                emaids.close();
+                return new FreeMarkerEngine().render(
+                        new ModelAndView(model, SUBREDDIT_DOES_NOT_EXIST_VIEW)
+                );
             }
             List<Post> posts = PostDao.getPosts(emaids, subredditname);
             posts.sort((p1, p2) -> {
@@ -211,8 +217,8 @@ public class App {
                 PostDao.postSelf(emaids, ((ReddishUser) req.session().attribute(USER)), title, content, sub);
             }
             emaids.close();
-            return new FreeMarkerEngine().render(
-                    new ModelAndView(model, POST_VIEW));
+            res.redirect("/r/" + subreddit);
+            return "";
         });
 
         get("/hello", (req, res) -> "hello world");

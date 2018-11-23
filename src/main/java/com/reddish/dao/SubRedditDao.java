@@ -6,8 +6,14 @@ import com.reddish.model.Subreddit;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubRedditDao {
+
+    public static List<Subreddit> getAllReddits(EntityManager em)
+    {
+        return em.createQuery("FROM Subreddit", Subreddit.class).getResultList();
+    }
 
     public static Subreddit getReddit(EntityManager em, String name){
         try {

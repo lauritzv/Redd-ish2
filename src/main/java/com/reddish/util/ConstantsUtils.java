@@ -25,6 +25,8 @@ public class ConstantsUtils {
     public static final String REGISTER_SUBREDDIT_PATH = "registersubreddit";
     public static final String REGISTER_SUBREDDIT_VIEW = "registersubreddit.ftl";
 
+    public static final String SUBREDDIT_DOES_NOT_EXIST_VIEW = "subreddit_does_not_exist.ftl";
+
     public static final String POST_VIEW = "post.ftl";
     public static final String POST_PATH = "/post";
     public static final String NO_SUCH_SUBREDDISH = "Subreddish does not exist";
