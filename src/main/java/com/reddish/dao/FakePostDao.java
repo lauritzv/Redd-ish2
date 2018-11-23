@@ -18,7 +18,7 @@ public class FakePostDao {
         {
             //public ReddishUser(String username, String email, String password, String password2, Long karma,
             // List<Comment> comments, List<Post> posts) {
-            ReddishUser poster = new ReddishUser("user"+i, "email.com", "", "", new Long(5), null, null);
+            ReddishUser poster = new ReddishUser("user"+i, "email.com", "", "", new Long(5), null, null, null);
 
             posts.add(new Post(
                     poster,

@@ -8,6 +8,7 @@ public class ConstantsUtils {
     public final static String LOGIN_VIEW = "login.ftl";
     public final static String LOGIN_PATH = "/login";
     public final static String SUBREDDIT_PATH = "/r/:subreddit";
+    public final static String SUBSCRIBE_PATH = "/r/:subreddit/subscribe";
     public final static String SUBREDDIT_PARAM = "subreddit";
     public final static String REGISTER_VIEW = "register.ftl";
     public final static String REGISTER_PATH = "/register";

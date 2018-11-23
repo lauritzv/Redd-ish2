@@ -34,10 +34,13 @@ public class ReddishUser {
 	@OneToMany (fetch = FetchType.EAGER)
     private List<Post> posts;
 
+	@OneToMany(fetch = FetchType.EAGER)
+	private List<Subreddit> subscriptions;
+
     public ReddishUser() {
     }
 
-    public ReddishUser(String username, String email, String password, String password2, Long karma, List<Comment> comments, List<Post> posts) {
+    public ReddishUser(String username, String email, String password, String password2, Long karma, List<Comment> comments, List<Post> posts, List<Subreddit> subscriptions) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -111,6 +114,14 @@ public class ReddishUser {
         this.posts = posts;
     }
 
+    public List<Subreddit> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subreddit> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
     public String validate() {
 		String error = null;
 		
@@ -131,5 +142,19 @@ public class ReddishUser {
        Post post = new Post(this, date, votes,  title, new ArrayList<Comment>(), link, subreddit, linkPost, content);
        posts.add(post);
        return post;
+    }
+
+    public boolean subscribe( Subreddit subreddit){
+        if(subreddit == null || subscriptions.contains(subreddit))
+            return false;
+        else {
+            return subscriptions.add(subreddit);
+        }
+    }
+
+    public boolean unsubscribe(Subreddit subreddit){
+        if(subreddit == null)
+            return false;
+        return subscriptions.remove(subreddit);
     }
 }

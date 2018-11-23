@@ -116,7 +116,8 @@ public class DatabasePopulatorerer {
                 "passord",
                 69L,
                 new ArrayList<Comment>(),
-                new ArrayList<Post>());
+                new ArrayList<Post>(),
+                new ArrayList<Subreddit>());
     }
 
     private static ReddishUser gumman() {
@@ -126,7 +127,8 @@ public class DatabasePopulatorerer {
                 "passord",
                 9001L,
                 new ArrayList<Comment>(),
-                new ArrayList<Post>());
+                new ArrayList<Post>(),
+                new ArrayList<Subreddit>());
     }
 
     private static ReddishUser lauritz() {
@@ -136,7 +138,8 @@ public class DatabasePopulatorerer {
                 "passord",
                 999L,
                 new ArrayList<Comment>(),
-                new ArrayList<Post>());
+                new ArrayList<Post>(),
+                new ArrayList<Subreddit>());
     }
 
     private static ReddishUser fhqwhgads() {
@@ -146,7 +149,8 @@ public class DatabasePopulatorerer {
                 "passord",
                 1337L,
                 new ArrayList<Comment>(),
-                new ArrayList<Post>());
+                new ArrayList<Post>(),
+                new ArrayList<Subreddit>());
     }
 
 
