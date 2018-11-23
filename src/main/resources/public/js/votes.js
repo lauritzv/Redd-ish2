@@ -18,7 +18,7 @@ function send_vote_to_server(vote, post_id)
         dataType: "json",
         type: "post",
         method: "PUT",
-        url: "http://localhost:4567/rest/post/" + post_id,
+        url: "https://localhost:4567/rest/post/" + post_id,
         data: JSON.stringify(vote),
         success: on_success,
         error: function(jqXHR, textStatus, errorThrown){
