@@ -50,7 +50,11 @@ textarea{
 
 .subscription-button
 {
+    margin-top: auto;
     font-size: 12px;
+}
+.h2{
+    margin-top: 0px;
 }
 
 .delete-post-button

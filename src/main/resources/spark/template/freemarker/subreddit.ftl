@@ -20,23 +20,22 @@
 <body>
 <#include "header.ftl">
 <div class="container">
-    <h2>
+    <div class="row">
     <#if subreddit?? && subreddit != "">
-        Subreddish: ${subreddit}
+        <span class="h2 pull-left">Subredd-ish: ${subreddit}</span>
         <#if user?? && subscribed??>
-            <form method="post" action="/r/${subreddit}/subscribe">
-                <button class="btn-danger subscription-button" type="submit" formmethod="post">unsubscribe</button>
+                <form class="form-horizontal form-inline pull-right" method="post" action="/r/${subreddit}/subscribe">
+                <button class="btn btn-danger subscription-button" type="submit" formmethod="post">unsubscribe</button>
             </form>
         <#elseif user??>
-            <form method="post" action="/r/${subreddit}/subscribe">
-                <button class="btn-primary subscription-button" type="submit" formmethod="post">subscribe</button>
+                <form class="form-horizontal form-inline pull-right" method="post" action="/r/${subreddit}/subscribe">
+                <button class="btn btn-primary subscription-button" type="submit" formmethod="post">subscribe</button>
             </form>
         </#if>
     <#else>
-    The main page
+<span class="h2 pull-left">The main page</span>
     </#if>
-    </h2>
-
+    </div>
     <div id="posts">
         <#list posts as post>
             <hr>
