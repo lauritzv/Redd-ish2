@@ -4,6 +4,17 @@
 <head>
     <title>Reddish<#if subredditname??> | ${subredditname}</#if></title>
     <#include "headconstants.ftl">
+    <script src="/js/votes.js"></script>
+
+    <script>
+        <#if user??>
+        let loginUsername = "${user.username}";
+        let userPassword = "${user.password}";
+        <#else>
+        let loginUsername = "not_logged_in";
+        let userPassword = "not_logged_in";
+        </#if>
+    </script>
 </head>
 <body>
 <#include "header.ftl">
@@ -19,13 +30,19 @@
     <div class="container">
         <table class="post">
             <tr>
-                <td rowspan="3" class="upvotes">${post.votes}</td>
-                <td class="post-title">
-                    <#if post.linkPost>
-                        <a href="${post.link}" target="_blank">${post.title}</a>
-                    <#else>
-                        ${post.title}
-                    </#if>
+                <td>
+                    <button class="upvotebutton" onclick="upvote(${post.id});">↑</button>
+                </td>
+                <td rowspan="2" class="post-title">
+                    <a href="${post.link}">${post.title}</a>
+                </td>
+            </tr>
+            <tr>
+                <td id="votes_for_post_${post.id}" class="upvotes">${post.votes}</td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    <button class="downvotebutton" onclick="downvote(${post.id});">↓</button>
                 </td>
             </tr>
                 <#if post.content?? && post.content != "">
@@ -34,7 +51,7 @@
                 </tr>
                 </#if>
             <tr>
-                <td class="post-info">posted by <a href="/user/${post.poster.username}">${post.poster.username}</a>
+                <td class="post-info" colspan="2">posted by <a href="/user/${post.poster.username}">${post.poster.username}</a>
                     on ${post.date?number_to_datetime?string("YYYY-MM-dd HH:mm:ss")}</td>
             </tr>
         </table>
