@@ -29,4 +29,11 @@ public class LoginUtil {
         else
             return true;
     }
+
+    public static ReddishUser getAttachedUser(EntityManager em, Session session){
+        if(!isLoggedIn(session))
+            return null;
+        ReddishUser user = session.attribute(ConstantsUtils.USER);
+        return UserDao.getUserbyUsername(em, user.getUsername());
+    }
 }

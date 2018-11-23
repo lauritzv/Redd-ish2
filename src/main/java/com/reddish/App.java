@@ -81,6 +81,18 @@ public class App {
             );
         });
 
+        get(SUBSCRIBE_PATH, (req, res) -> {
+            Map<String, Object> model = new HashMap<>();
+            EntityManager emaids = sf.createEntityManager();
+            String subredditname = req.params(SUBREDDIT_PARAM);
+            ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
+            UserDao.subscribeUserTo(subredditname, user, emaids);
+            emaids.close();
+            res.redirect("/r/" + subredditname);
+            return "";
+
+        });
+
         get(LOGIN_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             return new FreeMarkerEngine().render(
@@ -238,8 +250,8 @@ public class App {
             String content = req.queryParams("commentcontent");
             EntityManager emaids = sf.createEntityManager();
             CommentDao.addComment(emaids, content, (ReddishUser) req.session().attribute(USER), PostDao.findPost(emaids, Long.parseLong(req.params(POSTID_PARAM))));
-            emaids.close();
             res.redirect("/r/" + req.params(SUBREDDIT_PARAM) + "/" + req.params(POSTID_PARAM) + "/comments");
+            emaids.close();
             return new FreeMarkerEngine().render(
                     new ModelAndView(model, COMMENTS_VIEW));
 
@@ -257,6 +269,13 @@ public class App {
             }
         });
 
+        before(SUBREDDIT_PATH, (request, response) -> {
+            boolean authenticated = LoginUtil.isLoggedIn(request.session());
+            if (!authenticated) {
+                throw new HttpException(401, NOT_PERMITTED);
+            }
+        });
+
         exception(HttpException.class, (exception, request, response) -> {
             Map<String, Object> model = new HashMap<>();
             model.put(EXCEPTION_ARGS, exception);
@@ -265,7 +284,6 @@ public class App {
         });
 
         setupVoteRest(sf);
-
 
     }
 }
