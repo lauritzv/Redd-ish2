@@ -28,6 +28,7 @@ public class App {
     private static boolean hasDatabase = false;
 
     public static void main(String[] args) {
+        secure("src/main/resources/keystore.jks","password", null, null);
         SessionFactory sf = new Configuration().configure().buildSessionFactory();
 
         if (!hasDatabase) {
