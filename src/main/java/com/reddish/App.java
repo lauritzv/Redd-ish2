@@ -14,10 +14,7 @@ import sun.rmi.runtime.Log;
 
 
 import javax.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.reddish.REST.VoteRest.setupVoteRest;
@@ -199,26 +196,55 @@ public class App {
         get(POST_PATH, (req, res) -> {
             Map<String, Object> model = new HashMap<>();
             model.put(USER, req.attribute(USER));
+            if (req.queryParams("titleerror") != null)
+                model.put("titleerror", "Title cannot be empty.");
+            if (req.queryParams("suberror") != null)
+                model.put("suberror", "Subreddit does not exist.");
             return new FreeMarkerEngine().render(
                     new ModelAndView(model, POST_VIEW));
         });
 
         post(POST_PATH, (req, res) -> {
+            boolean titleerror = false;
+            boolean suberror = false;
+            List<String> errors = new ArrayList<String>();
             Map<String, Object> model = new HashMap<>();
             String title = req.queryParams("title");
+            if (title.length() == 0) {
+                errors.add("Title cannot be empty.");
+                titleerror = true;
+            }
             String subreddit = req.queryParams("subreddit");
             String type = req.queryParams("type");
             EntityManager emaids = sf.createEntityManager();
             Subreddit sub = SubRedditDao.getReddit(emaids, subreddit);
-            if (type.equals("link")) {
-                String link = req.queryParams("link");
-                PostDao.postLink(emaids, ((ReddishUser) req.session().attribute(USER)), title, link, sub);
-            } else {
-                String content = req.queryParams("content");
-                PostDao.postSelf(emaids, ((ReddishUser) req.session().attribute(USER)), title, content, sub);
+            if (sub == null) {
+                errors.add("Subreddit does not exist.");
+                suberror = true;
             }
-            emaids.close();
-            res.redirect("/r/" + subreddit);
+            if (!titleerror && !suberror) {
+                if (type.equals("link")) {
+                    String link = req.queryParams("link");
+                    PostDao.postLink(emaids, ((ReddishUser) req.session().attribute(USER)), title, link, sub);
+                } else {
+                    String content = req.queryParams("content");
+                    PostDao.postSelf(emaids, ((ReddishUser) req.session().attribute(USER)), title, content, sub);
+                }
+                emaids.close();
+                res.redirect("/r/" + subreddit);
+            } else {
+                String appendToRedirect = "?";
+                if (titleerror)
+                    appendToRedirect += "titleerror=true";
+
+                if (suberror) {
+                    if (titleerror)
+                        appendToRedirect += "&";
+                    appendToRedirect += "suberror=true";
+
+                }
+                res.redirect(POST_PATH + appendToRedirect);
+            }
             return "";
         });
 

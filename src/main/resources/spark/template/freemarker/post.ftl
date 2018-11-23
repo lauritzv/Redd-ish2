@@ -39,6 +39,13 @@
         <input type="submit" class="btn btn-primary" value="submit"> <br>
     </form>
 
+    <#if titleerror??>
+        <p style="color: red;">${titleerror}</p>
+    </#if>
+
+    <#if suberror??>
+        <p style="color: red;">${suberror}</p>
+    </#if>
     <#include "footer.ftl">
 </div>
 </body>
