@@ -1,7 +1,9 @@
 package com.reddish.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import spark.utils.StringUtils;
@@ -37,6 +39,9 @@ public class ReddishUser {
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Subreddit> subscriptions;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private Map<Integer, VoteModel> votedForPostIds;
+
     public ReddishUser() {
     }
 
@@ -48,6 +53,54 @@ public class ReddishUser {
         this.karma = karma;
         this.comments = comments;
         this.posts = posts;
+    }
+
+    public String validate() {
+        String error = null;
+        if(StringUtils.isEmpty(username)) {
+            error = "You have to enter a username";
+        } else if(!EMAIL_ADDRESS_REGEX.matcher(email).matches()) {
+            error = "You have to enter a valid email address";
+        } else if(StringUtils.isEmpty(password)) {
+            error = "You have to enter a password";
+        } else if(!password.equals(password2)) {
+            error = "The two passwords do not match";
+        }
+        return error;
+    }
+
+    public VoteModel vote(Post post, boolean up) {
+        VoteModel vote = new VoteModel(post.getId(), up, this);
+        votedForPostIds.put(post.getId(), vote);
+        return vote;
+    }
+
+    public Post addPost(long date, long votes, String title, String link, Subreddit subreddit, Boolean linkPost, String content) {
+        Post post = new Post(this, date, votes,  title, new ArrayList<Comment>(), link, subreddit, linkPost, content);
+        posts.add(post);
+        return post;
+    }
+
+    public boolean deletePost(Post post){
+        return getPosts().remove(post);
+    }
+
+    public boolean subscribe( Subreddit subreddit){
+        if(subreddit == null || subscriptions.contains(subreddit))
+            return false;
+        else {
+            return subscriptions.add(subreddit);
+        }
+    }
+
+    public boolean unsubscribe(Subreddit subreddit){
+        if(subreddit == null)
+            return false;
+        return subscriptions.remove(subreddit);
+    }
+
+    public boolean hasVoted(Post post, boolean value){
+        return (!votedForPostIds.containsKey(post.getId()) || votedForPostIds.get(post.getId()).isVote() != value);
     }
 
     public int getId() {
@@ -129,43 +182,13 @@ public class ReddishUser {
         this.subscriptions = subscriptions;
     }
 
-    public String validate() {
-		String error = null;
-		
-		if(StringUtils.isEmpty(username)) {
-			error = "You have to enter a username";
-		} else if(!EMAIL_ADDRESS_REGEX.matcher(email).matches()) {
-			error = "You have to enter a valid email address";
-		} else if(StringUtils.isEmpty(password)) {
-			error = "You have to enter a password";
-		} else if(!password.equals(password2)) {
-			error = "The two passwords do not match";
-		}
-		
-		return error;
-	}
-
-    public Post addPost(long date, long votes, String title, String link, Subreddit subreddit, Boolean linkPost, String content) {
-       Post post = new Post(this, date, votes,  title, new ArrayList<Comment>(), link, subreddit, linkPost, content);
-       posts.add(post);
-       return post;
+    public Map<Integer, VoteModel> getVotedForPostIds() {
+        return votedForPostIds;
     }
 
-    public boolean deletePost(Post post){
-        return getPosts().remove(post);
+    public void setVotedForPostIds(Map<Integer, VoteModel> votedForPostIds) {
+        this.votedForPostIds = votedForPostIds;
     }
 
-    public boolean subscribe( Subreddit subreddit){
-        if(subreddit == null || subscriptions.contains(subreddit))
-            return false;
-        else {
-            return subscriptions.add(subreddit);
-        }
-    }
 
-    public boolean unsubscribe(Subreddit subreddit){
-        if(subreddit == null)
-            return false;
-        return subscriptions.remove(subreddit);
-    }
 }

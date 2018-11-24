@@ -10,7 +10,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import spark.*;
 import spark.template.freemarker.FreeMarkerEngine;
-import sun.rmi.runtime.Log;
 
 
 import javax.persistence.EntityManager;

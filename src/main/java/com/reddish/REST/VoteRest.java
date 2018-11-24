@@ -7,6 +7,7 @@ import com.reddish.dao.UserDao;
 import com.reddish.model.Post;
 import com.reddish.model.ReddishUser;
 import com.reddish.model.Vote;
+import com.reddish.model.VoteModel;
 import org.hibernate.SessionFactory;
 
 import javax.persistence.EntityManager;
@@ -23,50 +24,53 @@ public class VoteRest {
     public static String POST_PATH = REST_PATH + "/post";
 
 
-
-
     /**
      * setup vote rest, not set upvote rest
      */
-    public static void setupVoteRest(SessionFactory sf){
+    public static void setupVoteRest(SessionFactory sf) {
 
         put(POST_PATH + "/:postid", (req, res) -> {
             String body = req.body();
-            Gson gson =  new GsonBuilder().create();
+            Gson gson = new GsonBuilder().create();
 
             Vote vote = gson.fromJson(body, Vote.class);
             String username = vote.getUsername();
 
-            if(username.equals("not_logged_in")){
+            if (username.equals("not_logged_in")) {
                 return JSON_INAUTHENTICATED_MESSAGE;
-            }else{
+            } else {
                 EntityManager em = sf.createEntityManager();
                 ReddishUser user = UserDao.getUserbyUsername(em, username);
-                if(user==null || !user.getPassword().equals(vote.getPassword()))
-                {
+                if (user == null || !user.getPassword().equals(vote.getPassword())) {
                     em.close();
                     return JSON_INAUTHENTICATED_MESSAGE;
                 }
                 Long post_id = null;
-                try{
+                try {
                     post_id = Long.parseLong(req.params("postid"));
-                }catch(Exception e){
+                } catch (Exception e) {
                     return JSON_POST_DOES_NOT_EXIST_MESSAGE;
                 }
 
                 Post post = PostDao.findPost(em, post_id);
-                if(post==null){
+                if (post == null) {
                     em.close();
                     return JSON_POST_DOES_NOT_EXIST_MESSAGE;
                 }
 
-
-                if(vote.getUp())
+                VoteModel voteModel = null;
+                if (vote.getUp() && user.hasVoted(post, true)) {
                     post.upvote();
-                else
+                    voteModel = user.vote(post, vote.getUp());
+                } else if(!vote.getUp() && user.hasVoted(post, false)) {
                     post.downvote();
+                    voteModel = user.vote(post, vote.getUp());
+                }
 
+                UserDao.persistVote(em, voteModel);
+                UserDao.mergeUser(em, user);
                 PostDao.mergePost(em, post);
+
                 em.close();
 
                 VoteReply voteReply = new VoteReply();
@@ -79,17 +83,17 @@ public class VoteRest {
 
         get(POST_PATH + "/:postid", (req, res) -> {
             Long post_id = null;
-            try{
+            try {
                 post_id = Long.parseLong(req.params("postid"));
-            }catch(Exception e){
+            } catch (Exception e) {
                 return JSON_POST_DOES_NOT_EXIST_MESSAGE;
             }
 
             EntityManager em = sf.createEntityManager();
             Post post = null;
-            try{
+            try {
                 post = PostDao.findPost(em, post_id);
-            }catch (Exception e){
+            } catch (Exception e) {
                 em.close();
                 return JSON_POST_DOES_NOT_EXIST_MESSAGE;
             }
@@ -102,14 +106,13 @@ public class VoteRest {
     }
 
 
-
-    private static class VoteReply{
+    private static class VoteReply {
 
         private long post_id;
         private long votes;
 
-        private VoteReply()
-        {}
+        private VoteReply() {
+        }
 
         public long getPost_id() {
             return post_id;
