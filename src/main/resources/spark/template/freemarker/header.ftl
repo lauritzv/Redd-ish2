@@ -16,6 +16,7 @@
                         <li><a href="/r/cats">r/cats</a></li>
                         <li><a href="/r/Dank">r/Dank</a></li>
                         <li><a href="/r/Wavy">r/Wavy</a></li>
+                        <li><a href="/r/Energy">r/Energy</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><hr></li>
