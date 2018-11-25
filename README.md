@@ -5,7 +5,11 @@ A Spark Java implementation of a reddit-like service
 Made for the DAT250-course on [HVL](https://hvl.no) november of 2018 by
 [Zorrix](https://github.com/magnusEdva), [GuMMaN](https://github.com/gummangummangumman), [fhqwhgadss](https://github.com/fhqwhgadss) and [lauritzv](https://github.com/lauritzv)
 
+NB! Don't use this as-is due to low password safety!
+
+
 ![Screenshot](/screenshot.gif?raw=true "screenshot")
+
 
 To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configured with a hibernate.cfg.xml file inside the /resources/ directory. To succesfully compile Redd-ish a hibernate.cfg.xml file specifying your database of choice must be provided. The file looks like this:
 
