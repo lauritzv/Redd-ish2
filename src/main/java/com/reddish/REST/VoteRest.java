@@ -49,6 +49,7 @@ public class VoteRest {
                 try {
                     post_id = Long.parseLong(req.params("postid"));
                 } catch (Exception e) {
+                    em.close();
                     return JSON_POST_DOES_NOT_EXIST_MESSAGE;
                 }
 
