@@ -4,15 +4,12 @@ import com.reddish.model.Comment;
 import com.reddish.model.Post;
 import com.reddish.model.ReddishUser;
 import com.reddish.model.Subreddit;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 public class DatabasePopulatorerer {
 
     public void populate(EntityManager em) {
