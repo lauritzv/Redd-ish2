@@ -26,6 +26,7 @@ To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configu
         <mapping class="com.reddish.model.Comment" />
         <mapping class="com.reddish.model.Subreddit" />
         <mapping class="com.reddish.model.Post" />
+        <mapping class="com.reddish.model.VoteModel" />
     </session-factory>
 </hibernate-configuration>
 ```
