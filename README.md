@@ -8,6 +8,18 @@ Made for the DAT250-course on [HVL](https://hvl.no) november of 2018 by
 
 ![Screenshot](/screenshot.gif?raw=true "screenshot")
 
+## How to run it
+
+1. Clone the repository.
+
+2. Add a hibernate.cfg.xml file in the /resources/ folder (see below)
+
+3. Execute `mvn compile exec:java` in the root directory OR run the project in an IDE
+
+4. Open in your browser `https://localhost:4567/`
+
+## Adding the hibernate file
+
 
 To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configured with a hibernate.cfg.xml file inside the /resources/ directory. To succesfully compile Redd-ish a hibernate.cfg.xml file specifying your database of choice must be provided. The file looks like this:
 
@@ -33,4 +45,4 @@ To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configu
 </hibernate-configuration>
 ```
 
-Hibernate will then automatically generate the tables required when running for the first time.
+Hibernate will automatically generate the tables required when running for the first time.
