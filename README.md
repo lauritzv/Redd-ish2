@@ -21,7 +21,7 @@ Made for the DAT250-course on [HVL](https://hvl.no) november of 2018 by
 ## Adding the hibernate file
 
 
-To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configured with a hibernate.cfg.xml file inside the /resources/ directory. To succesfully compile Redd-ish a hibernate.cfg.xml file specifying your database of choice must be provided. The file looks like this:
+To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configured with a hibernate.cfg.xml file inside the /resources/ directory. To succesfully compile Redd-ish a hibernate.cfg.xml file specifying your database of choice must be provided. You'll find the file template below, you must change the INSERT_STUFF_HERE to match with your own SQL database.
 
 ```xml
 <?xml version='1.0' encoding='utf-8'?>
@@ -30,10 +30,10 @@ To run Redd-ish an SQL server is required. Redd-ish runs using Hibernate configu
 
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url">JDBC adress here;create=true</property>
-        <property name="dialect">SQL Dialect here</property>
-        <property name="hibernate.connection.username">username</property>
-        <property name="hibernate.connection.password">password</property>
+        <property name="connection.url">INSERT_JDBC_ADDRESS_HERE;create=true</property>
+        <property name="dialect">INSERT_SQL_DIALECT_HERE</property>
+        <property name="hibernate.connection.username">INSERT_USERNAME_HERE</property>
+        <property name="hibernate.connection.password">INSERT_PASSWORD_HERE</property>
         <property name="show_sql">true</property>
         <property name="hbm2ddl.auto">update</property>
         <mapping class="com.reddish.model.ReddishUser" />
