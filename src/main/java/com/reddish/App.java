@@ -94,11 +94,9 @@ public class App {
         });
 
         post(SUBSCRIBE_PATH, (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
             EntityManager emaids = sf.createEntityManager();
             String subredditname = req.params(SUBREDDIT_PARAM);
             ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
-
 
             //subscribe if you're subscribed, unsubscribe if not
             if (!user.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent()) {
@@ -109,19 +107,6 @@ public class App {
             emaids.close();
             res.redirect("/r/" + subredditname);
             return "";
-        });
-
-        get("/test/:subreddit", (req, res) -> {
-            EntityManager emaids = sf.createEntityManager();
-            String subredditname = req.params(SUBREDDIT_PARAM);
-            ReddishUser user = LoginUtil.getAttachedUser(emaids, req.session());
-
-            ReddishUser freshuser = UserDao.getUserbyUsername(emaids, user.getUsername());
-            freshuser.getSubscriptions();
-            emaids.close();
-
-            return user.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent()
-                    + " | " + freshuser.getSubscriptions().stream().filter(sub -> sub.getName().equals(subredditname)).findAny().isPresent();
         });
 
         get(LOGIN_PATH, (req, res) -> {

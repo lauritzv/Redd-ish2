@@ -12,7 +12,7 @@ public class LoginUtil {
 
     public static Boolean login(EntityManager em, Session session, String username, String password){
         ReddishUser user = UserDao.getUserbyUsername(em, username);
-        if (user == null || !user.getPassword().equals(password) )
+        if (user == null || !(user.getPassword().equals(password) || PasswordUtil.verifyPassword(password, user.getPassword())) )
             return false;
         session.attribute(ConstantsUtils.USER, user);
         return true;
