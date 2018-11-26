@@ -31,16 +31,16 @@ public class ReddishUser {
 	private Long karma;
 
 	@OneToMany (fetch = FetchType.EAGER)
-	private List<Comment> comments;
+	private List<Comment> comments = new ArrayList<Comment>();
 
 	@OneToMany (fetch = FetchType.EAGER)
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<Post>();
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private List<Subreddit> subscriptions;
+	private List<Subreddit> subscriptions = new ArrayList<Subreddit>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Map<Integer, VoteModel> votedForPostIds;
+    private Map<Integer, VoteModel> votedForPostIds = new HashMap<Integer, VoteModel>();
 
     public ReddishUser() {
     }
