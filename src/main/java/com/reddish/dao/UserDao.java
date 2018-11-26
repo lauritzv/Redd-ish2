@@ -1,6 +1,7 @@
 package com.reddish.dao;
 
 import com.reddish.model.*;
+import com.reddish.util.PasswordUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -21,6 +22,8 @@ public class UserDao {
     public static ReddishUser registerUser(EntityManager em, String username, String email, String password, String password2) {
         ReddishUser user = new ReddishUser(username, email, password, password2, 0L, new ArrayList<Comment>(), new ArrayList<Post>(), new ArrayList<Subreddit>());
         if (user.validate() == null) {
+            user.setPassword(PasswordUtil.hashPassword(user.getPassword()));
+            user.setPassword2(PasswordUtil.hashPassword(user.getPassword2()));
             persist(em, user);
             return user;
         }
