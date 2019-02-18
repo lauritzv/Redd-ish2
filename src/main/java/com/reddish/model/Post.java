@@ -2,6 +2,7 @@ package com.reddish.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Post {
@@ -146,5 +147,10 @@ public class Post {
         }
         Post c = (Post) o;
         return c.getId() == this.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, poster, date, votes, title, comments, link, subreddit, linkPost, content);
     }
 }
